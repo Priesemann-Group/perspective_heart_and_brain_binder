@@ -29,5 +29,3 @@ section and figure.
 
 
 Binder [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Priesemann-Group/perspective_heart_and_brain_binder.git/HEAD)
-second binder
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Priesemann-Group/perspective_heart_and_brain_binder.git/main)
