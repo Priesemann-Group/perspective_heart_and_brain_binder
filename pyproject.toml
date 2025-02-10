@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "perspective-heart-and-brain"
+version = "0.1.0"
+description = "Poetry config for the heart and brain project"
+authors = ["Simon"]
+license = "MIT"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+numpy = "^2.1.1"
+ipykernel = "^6.29.5"
+pip = "^24.2"
+jax = {extras = ["cuda12"], version = "^0.4.34"}
+
+[tool.poetry.group.dev.dependencies]
+scipy = "^1.14.1"
+matplotlib = "^3.9.2"
+networkx = "^3.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry2conda]
+name = "heart_and_brain"  
+channels = ["conda-forge", "defaults"]
+
