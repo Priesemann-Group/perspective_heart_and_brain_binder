@@ -1,5 +1,4 @@
 # Nonlinear Dynamics of Heart and Brain
-# Nonlinear Dynamics of Heart and Brain
 
 ## Explore the notebook
 ### Loading in binder
@@ -16,13 +15,11 @@ negative impact on your binder version.
 exercises at the end of each section. Feel free to take them as a starting point for 
 elaborating more creative questions.
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/
-JanaLasser/salt-polygons-are-caused-by-convection/master)
 
 
 ### Tips for working in the notebook
 * To run a code cell, press SHIFT+ENTER
-* SSome code cells depend on results from code cells above them (for example cells 
+* Some code cells depend on results from code cells above them (for example cells 
 provising a visualisation of the results of a simulation carried out in the above 
 cells).
 * You can navigate through the different sections of the notebook by using the table 

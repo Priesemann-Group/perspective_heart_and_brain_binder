@@ -1,10 +1,9 @@
 import matplotlib.pyplot as plt
-import matplotlib.colors as colors
 import matplotlib as mpl
-import matplotlib.gridspec as gridspec
 import numpy as np
-import scipy.sparse
-from scipy.sparse import csr_matrix
+import os, sys
+sys.path.append(os.getcwd())
+from .FHN_model import *
 
 projectfolder = "../figures/"
 simulation_name = "default"
