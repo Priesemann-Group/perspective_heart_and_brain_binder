@@ -7,10 +7,9 @@ you to try the executable paper without installing an environment locally in you
 computer.
 * **Note**: if you click on the binder link for the first time, the project will take 
 a few minutes to load (~10 min). 
-* Once the project is loaded, feel free to experiment with the model by changing both 
-the notebook and the codebase, both in the notebook and in the codebase files - you 
-cannot _break_ anything in the repository, worst case scenario you could have a 
-negative impact on your binder version.
+* Once the project is loaded, feel free to experiment with the model by changing parameters or reshaping the codebase- you 
+cannot _break_ anything in the repository, the changes will only affect your binder version.
+* Allow some time for the silumation and the order parameter analysis tools to run: since system sizes are rather big it might take a while for the code to execute.
 * To guide you through some interesting aspects of the model, there are some 
 exercises at the end of each section. Feel free to take them as a starting point for 
 elaborating more creative questions.
@@ -23,9 +22,7 @@ elaborating more creative questions.
 provising a visualisation of the results of a simulation carried out in the above 
 cells).
 * You can navigate through the different sections of the notebook by using the table 
-of contents at the beginning of the notebook. You can also jump back to the table of 
-contents by clicking the "table of contents" link that is embedded below every 
-section and figure.
+of contents at the beginning of the notebook.
 
 
-Binder [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Priesemann-Group/perspective_heart_and_brain_binder.git/HEAD)
+Binder [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Priesemann-Group/perspective_heart_and_brain_binder.git/main)
