@@ -1,9 +1,11 @@
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
+import matplotlib.colors as colors
+
 import os, sys
-sys.path.append(os.getcwd())
-from .FHN_model import *
+##sys.path.append(os.getcwd())
+#from .FHN_model import *
 
 projectfolder = "../figures/"
 simulation_name = "default"
