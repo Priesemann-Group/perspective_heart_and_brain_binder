@@ -2,9 +2,10 @@
 
 ## Explore the notebook
 ### Loading in binder
-* To explore the executable paper, click on the Binder-link below. This will enable 
+* To explore the executable paper, click on the Binder badge below. This will enable 
 you to try the executable paper without installing an environment locally in your 
 computer.
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Priesemann-Group/perspective_heart_and_brain_binder.git/main)
 * **Note**: if you click on the binder link for the first time, the project will take 
 a few minutes to load (~10 min). 
 * Once the project is loaded, feel free to experiment with the model by changing parameters or reshaping the codebase- you 
@@ -25,4 +26,3 @@ cells).
 of contents at the beginning of the notebook.
 
 
-Binder [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Priesemann-Group/perspective_heart_and_brain_binder.git/main)
