@@ -1,5 +1,5 @@
 import networkx as nx
-import numpy as np #we might be able to get rid of this if we implement better laplacian for heart
+import numpy as np 
 from scipy.sparse import diags, coo_matrix
 from scipy import sparse
 import jax
@@ -7,6 +7,8 @@ import jax.numpy as jnp
 import jax.random as jr
 from jax.experimental import sparse
 from jax import lax, vmap
+import warnings
+
 
 class FHN_model:
     def __init__(self,
@@ -27,8 +29,7 @@ class FHN_model:
                 w0_sigma=None,
                 adjacency_seed=1000,
                 stimulus_time=2000):
-        ## Model parameters
-        # TODO atm here I pass only the parameters we use in the simulations. For eDvcational purposes we should change it
+   
         if type(organ)==str and organ == 'brain':
             if type(N)==str and N == 'organ_default':
                 N = 1000
@@ -125,12 +126,31 @@ class FHN_model:
         self.ts = None
         self.vs = None
         self.ws = None
+
+        params = {
+            'organ': organ,
+            'N': N,
+            'a': a,
+            'b': b,
+            'e': e,
+            'sigma': sigma,
+            'adjacency_seed': adjacency_seed
+        }
+
+        if organ == 'brain':
+            params['m'] = m
+            params['k'] = k
+        elif organ == 'heart':
+            params['p'] = p
+            params['Dv'] = Dv
+            params['stimulus_time'] = stimulus_time
+        print(params)
         
 
     def nullclines(self, v_array):
         return (v_array, self.a*v_array*(v_array-self.b)*(1-v_array))  # return the corresponding w_arrays
     
-    #random network implementation TODO: implement how to pass gaussian weights
+    
     def initiate_random_graph(self,  seed=100):
         '''
         Creates a random, directed, and weighted Erdos Renyi graph.
@@ -144,6 +164,7 @@ class FHN_model:
         Returns:
             sparse jax.experimental coupling matrix 
         '''
+        
         p = self.k / (self.N - 1)
         J=self.m/self.k
         # Create ER graph
@@ -155,8 +176,10 @@ class FHN_model:
             G[u][v]['weight'] = J
         
         # Get the adjacency matrix in sparse format
-        adj_matrix = nx.adjacency_matrix(G, weight='weight')
         
+        adj_matrix = nx.to_scipy_sparse_array(G, weight='weight').tocsr()
+
+
         self.J = sparse.BCSR.from_scipy_sparse(adj_matrix)
     
     #Laplacian generation for the heart
