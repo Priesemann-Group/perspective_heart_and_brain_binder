@@ -4,5 +4,5 @@ jupyterlab==3.5.0
 networkx==2.8.4
 jax==0.4.30
 scipy==1.9.1
-numpy==1.21.5
+numpy>=1.21.5
 matplotlib==3.5.2
