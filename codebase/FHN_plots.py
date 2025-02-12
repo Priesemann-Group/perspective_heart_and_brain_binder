@@ -122,6 +122,7 @@ def heart_plot(
     array=model.vs.T
 # Display the first frame
     array=array.reshape(model.N,model.N,-1)
+    array=array[4:model.N-4,4:model.N-4,:]
     img = ax.imshow(array[:,:, state_index], cmap=cmap, interpolation="bilinear", vmin=-np.max(np.abs(array)), vmax=np.max(np.abs(array)))
 	
     

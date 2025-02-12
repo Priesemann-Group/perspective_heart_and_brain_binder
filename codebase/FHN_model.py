@@ -39,7 +39,7 @@ class FHN_model:
             if type(e)==str and e == 'organ_default':
                 e = 0.01
             if type(sigma)==str and sigma == 'organ_default':
-                sigma = 0.1
+                sigma = 0.05
             if type(Dv)==str and Dv == 'organ_default':
                 Dv = 1
             elif Dv != 1:
