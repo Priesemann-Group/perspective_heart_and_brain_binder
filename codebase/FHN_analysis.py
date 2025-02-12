@@ -6,7 +6,7 @@ from scipy.signal import hilbert
 import warnings
 
 class FHN_kuramoto:
-    def __init__(self, model=None, vs=None, ws=None, ts=None, transient_time=100):
+    def __init__(self, model=None, vs=None, ws=None, ts=None, transient_length=100):
         if model is not None:
             self.ts = model.ts
             self.vs = model.vs
@@ -14,13 +14,13 @@ class FHN_kuramoto:
             self.N = model.N
             self.block = model.block
             self.organ = model.organ
-            self.transient_time=transient_time
+            self.transient_length=transient_length
         elif vs is not None and ws is not None:
             self.vs = vs
             self.ws = ws
             self.ts = ts
             self.N = vs.shape[1]
-            self.transient_time=transient_time
+            self.transient_length=transient_length
         else:
             raise ValueError("Either model or vs and ws must be provided")
 
@@ -71,7 +71,7 @@ class FHN_kuramoto:
         if self.organ == 'brain':
             phases=self.compute_phases(self.vs.T) 
             
-            amplitude, phase = self.kuramoto_order_parameter(phases[:, self.transient_time:Tfin]) #here I somehow need to remove the transient and last timesteps
+            amplitude, phase = self.kuramoto_order_parameter(phases[:, self.transient_length:Tfin]) #here I somehow need to remove the transient and last timesteps
             self.R= jnp.mean(amplitude)
         if self.organ == 'heart':
             v_values= self.vs.T
@@ -85,7 +85,7 @@ class FHN_kuramoto:
                 v_values=v_values[4:(N_x-4), 4:(N_x-4), :]
                 v_values=v_values.reshape(-1, v_values.shape[2])
                 phases=self.compute_phases(v_values)
-                phases=phases[:,self.transient_time:Tfin]  #here to be changes to cover from equilibration to a bunch of stuff before end
+                phases=phases[:,self.transient_length:Tfin]  #here to be changes to cover from equilibration to a bunch of stuff before end
                 phases=phases.reshape(N_x-8,N_x-8,-1)
                 # TODO: replace this loop
                 R=[]
@@ -103,7 +103,7 @@ class FHN_kuramoto:
                 warnings.warn("Too few nodes to address boundary conditions")   
                 block=~block
                 phases=self.compute_phases(v_values)
-                phases=phases[:,self.transient_time:Tfin]  #here to be changes to cover from equilibration to a bunch of stuff before end
+                phases=phases[:,self.transient_length:Tfin]  #here to be changes to cover from equilibration to a bunch of stuff before end
                 phases=phases.reshape(N_x,N_x,-1)
                 R=[]
                 for j in range(N_x):  # Iterate over the correct dimension
@@ -122,7 +122,7 @@ class FHN_kuramoto:
 
 
 class FHN_entropy:
-    def __init__(self, model=None, vs=None, ws=None, ts=None, transient_time=100):
+    def __init__(self, model=None, vs=None, ws=None, ts=None, transient_length=100):
         if model is not None:
             self.ts = model.ts
             self.vs = model.vs
@@ -130,13 +130,13 @@ class FHN_entropy:
             self.N = model.N
             self.block = model.block
             self.organ = model.organ
-            self.transient_time=transient_time
+            self.transient_length=transient_length
         elif vs is not None and ws is not None:
             self.vs = vs
             self.ws = ws
             self.ts = ts
             self.N = vs.shape[1]
-            self.transient_time=transient_time
+            self.transient_length=transient_length
         else:
             raise ValueError("Either model or vs and ws must be provided")
 
@@ -186,13 +186,13 @@ class FHN_entropy:
         if self.organ=='heart':
             binary_v = jnp.where(array > threshold, 1, 0)
             binary_v=binary_v.reshape(s**2, -1)
-            binary_v=binary_v[:, self.transient_time:]
+            binary_v=binary_v[:, self.transient_length:]
     
             entropy, normalised=self.pattern_entropy(binary_v,s*s, 1)
         if self.organ=='brain':
             binary_v = jnp.where(array > threshold, 1, 0)
             binary_v=binary_v.reshape(s, -1)
-            binary_v=binary_v[:, self.transient_time:]
+            binary_v=binary_v[:, self.transient_length:]
     
             entropy, normalised=self.pattern_entropy(binary_v,s, 1)
         return entropy, normalised
@@ -243,7 +243,7 @@ class FHN_entropy:
 
 
 class FHN_coherence:
-    def __init__(self, model=None, vs=None, ws=None, ts=None, transient_time=100):
+    def __init__(self, model=None, vs=None, ws=None, ts=None, transient_length=100):
         if model is not None:
             self.ts = model.ts
             self.vs = model.vs
@@ -251,13 +251,13 @@ class FHN_coherence:
             self.N = model.N
             self.block = model.block
             self.organ = model.organ
-            self.transient_time=transient_time
+            self.transient_length=transient_length
         elif vs is not None and ws is not None:
             self.vs = vs
             self.ws = ws
             self.ts = ts
             self.N = vs.shape[1]
-            self.transient_time=transient_time
+            self.transient_length=transient_length
         else:
             raise ValueError("Either model or vs and ws must be provided")
 
@@ -306,7 +306,7 @@ class FHN_coherence:
 
         v_values=self.vs.T
         if self.organ == 'brain':
-            self.coherence=self.calculate_coherence(v_values[:, self.transient_time:], window_size, step_size)
+            self.coherence=self.calculate_coherence(v_values[:, self.transient_length:], window_size, step_size)
         if self.organ == 'heart':
             N_x=self.N
             if N_x>8:
@@ -318,7 +318,7 @@ class FHN_coherence:
                 #TODO: implement this in JAX. I tried several times and failed
                 R=[]
                 for j in range(N_x-8):  # Iterate over the correct dimension
-                    filtered_column = v_values[:, j, self.transient_time:][block[:,j]]
+                    filtered_column = v_values[:, j, self.transient_length:][block[:,j]]
                     R.append(self.calculate_coherence(filtered_column, 500))
 
                 
@@ -328,7 +328,7 @@ class FHN_coherence:
                 v_values=v_values.reshape(N_x, N_x, -1)
                 R=[]
                 for j in range(N_x):
-                    filtered_column = v_values[:, j, self.transient_time:][block[:,j]]      
+                    filtered_column = v_values[:, j, self.transient_length:][block[:,j]]      
                     R.append(self.calculate_coherence(filtered_column, 500))
             R=jnp.array(R)
             self.coherence=jnp.mean(R)

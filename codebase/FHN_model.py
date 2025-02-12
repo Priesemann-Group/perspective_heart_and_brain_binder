@@ -7,7 +7,6 @@ import jax.numpy as jnp
 import jax.random as jr
 from jax.experimental import sparse
 from jax import lax, vmap
-import warnings
 
 
 class FHN_model:
@@ -28,7 +27,7 @@ class FHN_model:
                 v0_sigma=None, 
                 w0_sigma=None,
                 adjacency_seed=1000,
-                stimulus_time=2000):
+                stimulus_period=2000):
    
         if type(organ)==str and organ == 'brain':
             if type(N)==str and N == 'organ_default':
@@ -78,7 +77,7 @@ class FHN_model:
         # Save model parameters
         self.organ=organ
         self.adjacency_seed=adjacency_seed
-        self.stimulus_time=stimulus_time
+        self.stimulus_period=stimulus_period
 
         self.N = N
         self.a = a
@@ -143,7 +142,7 @@ class FHN_model:
         elif organ == 'heart':
             params['p'] = p
             params['Dv'] = Dv
-            params['stimulus_time'] = stimulus_time
+            params['stimulus_period'] = stimulus_period
         print(params)
         
 
@@ -265,11 +264,11 @@ class FHN_model:
     def FHN_graph_noise(self):
         noise = self.sigma*jnp.ones(self.N)
         return noise
-    def solve_with_EulerMaruyama_fori(self, delta_t=0.1, T=3000.0, output_times=3000, random_key=jr.PRNGKey(1000)): 
+    def run_simulation(self, delta_t=0.1, T=3000.0, n_stored_states=3000, random_key=jr.PRNGKey(1000)): 
               
         # Calculate the number of solver steps based on the total time and delta_t
         num_steps = int(T / delta_t)
-        output_every = int(max(num_steps/output_times,1))
+        output_every = int(max(num_steps/n_stored_states,1))
         
         Ntot = self.N
         
@@ -281,8 +280,8 @@ class FHN_model:
             indices = jnp.where((jnp.arange(Ntot) % self.N == 0) & (self.block.flatten() == 0))[0]
                 
         # Initialize output arrays
-        vs = jnp.zeros((output_times, Ntot))
-        ws = jnp.zeros((output_times, Ntot))
+        vs = jnp.zeros((n_stored_states, Ntot))
+        ws = jnp.zeros((n_stored_states, Ntot))
 
         # Define the scan function
         def scan_fn(step, carry):
@@ -298,7 +297,7 @@ class FHN_model:
             # Heart-specific: periodic stimulus from SA nodes
             if self.organ=='heart':
                 # Apply stimulus to the specified indices
-                v = jax.lax.cond((step > 0) & (step % int(self.stimulus_time / delta_t) == 0),
+                v = jax.lax.cond((step > 0) & (step % int(self.stimulus_period / delta_t) == 0),
                         lambda v: v.at[indices].add(0.1),
                         lambda v: v,
                         v)
@@ -310,8 +309,8 @@ class FHN_model:
         # Run the scan function
         _, _, _, vs, ws = jax.lax.fori_loop(0, num_steps, scan_fn, (self.v0, self.w0, random_key, vs, ws))
         
-        # Make sure only at most output_times many time points are stored
-        self.ts = jnp.linspace(0, T, output_times)
+        # Make sure only at most n_stored_states many time points are stored
+        self.ts = jnp.linspace(0, T, n_stored_states)
         self.vs = vs
         self.ws = ws
 

@@ -109,7 +109,7 @@ def heart_plot(
         fig,
         ax,
         model,
-        t_frame=100,
+        state_index=100,
         cbar_axes=None,
         cbar_shrink=0.6,
         cbar_location="right",
@@ -122,7 +122,7 @@ def heart_plot(
     array=model.vs.T
 # Display the first frame
     array=array.reshape(model.N,model.N,-1)
-    img = ax.imshow(array[:,:, t_frame], cmap=cmap, interpolation="bilinear", vmin=-np.max(np.abs(array)), vmax=np.max(np.abs(array)))
+    img = ax.imshow(array[:,:, state_index], cmap=cmap, interpolation="bilinear", vmin=-np.max(np.abs(array)), vmax=np.max(np.abs(array)))
 	
     
 # Add a colorbar with specific ticks
@@ -145,7 +145,7 @@ def plot_kymograph(
     fig,
     ax,
     model,
-    t_start=100,
+    plot_from=100,
     cmap="seismic",
     xlabel="time (a.u.)",
     ylabel="Node",
@@ -157,8 +157,8 @@ def plot_kymograph(
     # Plot the Kymograph
     if model.organ == "brain":
         im=ax.imshow(
-            model.vs[t_start:, ::-1].T,
-            extent=(np.min(model.ts[t_start:]), np.max(model.ts[t_start:]), 0, model.N),
+            model.vs[plot_from:, ::-1].T,
+            extent=(np.min(model.ts[plot_from:]), np.max(model.ts[plot_from:]), 0, model.N),
             aspect="auto",
             cmap=cmap,
             interpolation="none",
@@ -169,8 +169,8 @@ def plot_kymograph(
         array=model.vs.reshape(len(model.ts), model.N, model.N)
         a=int(model.N/2)
         im=ax.imshow(
-            array[t_start:, a, :].T,
-            extent=(np.min(model.ts[t_start:]), np.max(model.ts[t_start:]), 0, model.N),
+            array[plot_from:, a, :].T,
+            extent=(np.min(model.ts[plot_from:]), np.max(model.ts[plot_from:]), 0, model.N),
             aspect="auto",
             cmap=cmap,
             interpolation="none",
@@ -208,21 +208,21 @@ def collective_signal(
     fig,
     ax,
     model,
-    t_start=1000
+    plot_from=1000
 ):
     array=model.vs.T
     #here the y scale is set to match the one of the heart simulation
 
-    EEG=array[ :, t_start:].sum(axis=0)/10000
+    EEG=array[ :, plot_from:].sum(axis=0)/10000
     
     if model.organ=='brain':
         
-        ax.plot(model.ts[t_start:],EEG, color='darkblue')
+        ax.plot(model.ts[plot_from:],EEG, color='darkblue')
     elif model.organ=='heart':
-        ax.plot( model.ts[t_start:],EEG, color='darkred')
+        ax.plot( model.ts[plot_from:],EEG, color='darkred')
     
     ax.set_ylim([-0.09,0.24])
-    ax.set_xlim(model.ts[t_start], model.ts[-1])
+    ax.set_xlim(model.ts[plot_from], model.ts[-1])
     ax.set_aspect('auto')
     ax.set_ylabel('colective signal (a.u.)', fontsize=18)
     ax.set_xlabel('time (a.u.)', fontsize=18)
@@ -237,7 +237,7 @@ def plot_kymograph_and_collective_signal(
     ax_kymograph,
     ax_signal,
     model,
-    t_start=1000,
+    plot_from=1000,
     cmap="seismic",
     xlabel="time (a.u.)",
     ylabel="Node",
@@ -251,7 +251,7 @@ def plot_kymograph_and_collective_signal(
         fig,
         ax_kymograph,
         model,
-        t_start=t_start,
+        plot_from=plot_from,
         cmap=cmap,
         xlabel=xlabel,
         ylabel=ylabel,
@@ -261,6 +261,6 @@ def plot_kymograph_and_collective_signal(
         cbar_orientation=cbar_orientation,
     )
     # Plot the collective signal
-    collective_signal(fig, ax_signal, model, t_start=t_start)
+    collective_signal(fig, ax_signal, model, plot_from=plot_from)
     
     return im, cbar
