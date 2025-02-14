@@ -14,7 +14,7 @@ elaborating more creative questions.
 * To explore the executable notebook, click on the Binder badge below. This will enable 
 you to execute the code in the browser
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Priesemann-Group/perspective_heart_and_brain_binder.git/main)
-* **Note**: if you open the binder link for the first time, the project will take 
+* **Note**: when you open the binder link for the first time, the project will take 
 a few minutes to load (~10 min). 
 * Once the project is loaded, feel free to experiment with the model by changing parameters or reshaping the codebase - you 
 cannot _break_ anything in the repository, the changes will only affect your personal binder instance.
@@ -26,3 +26,4 @@ cannot _break_ anything in the repository, the changes will only affect your per
 * Some code cells depend on results from code cells above them (for example cells 
 providing a visualisation of the results of a simulation carried out in the above 
 cells). Thus, it is advised to run the code cells in order from top to bottom.
+* It might happen that kernel dies during the execution of the notebook: in this case, close the notebook and re-open the binder link.
